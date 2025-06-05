@@ -1,0 +1,744 @@
+/* ============================================
+   CAT COMPONENT - ESTILOS PRINCIPALES
+   ============================================ */
+
+.cat-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  min-height: 400px;
+  user-select: none;
+}
+
+/* ============================================
+   IMAGEN DEL GATO
+   ============================================ */
+
+.cat-wrapper {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: slideInFromBottom 0.8s ease-out;
+}
+
+.cat-image {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  object-position: center;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 6px 25px rgba(0,0,0,0.1));
+  animation: gentle-breathing 4s ease-in-out infinite;
+  background: transparent;
+  border-radius: 12px;
+}
+
+.cat-image.loading {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.cat-image.loaded {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ============================================
+   PLACEHOLDER DE CARGA
+   ============================================ */
+
+.loading-placeholder {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: var(--text-muted, #999);
+  font-size: 0.9rem;
+}
+
+.loading-spinner {
+  font-size: 2rem;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+/* ============================================
+   ANIMACIONES BASE
+   ============================================ */
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes gentle-breathing {
+  0%, 100% { 
+    transform: scale(1);
+  }
+  50% { 
+    transform: scale(1.02);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% { 
+    transform: translateY(0px); 
+  }
+  50% { 
+    transform: translateY(-10px); 
+  }
+}
+
+/* ============================================
+   EFECTOS DE INTERACTIVIDAD
+   ============================================ */
+
+/* Pulso sutil para indicar que es clickeable */
+.cat-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 220px;
+  height: 220px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, #ff8c42 0%, transparent 70%);
+  opacity: 0;
+  animation: pulse-hint 6s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes pulse-hint {
+  0%, 95%, 100% { 
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  2%, 5% { 
+    opacity: 0.08;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+/* Efectos hover */
+.cat-wrapper:hover .cat-image {
+  transform: scale(1.05) translateY(-3px);
+  filter: drop-shadow(0 8px 35px rgba(0,0,0,0.15)) brightness(1.05);
+}
+
+.cat-wrapper:active .cat-image {
+  transform: scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+/* ============================================
+   ESTADOS DE ÁNIMO
+   ============================================ */
+
+.cat-image.super-happy {
+  filter: drop-shadow(0 0 20px rgba(255, 107, 107, 0.5))
+          brightness(1.1)
+          saturate(1.2);
+  animation-duration: 2s;
+}
+
+.cat-image.happy {
+  filter: drop-shadow(0 0 15px rgba(255, 235, 59, 0.4))
+          brightness(1.05)
+          saturate(1.1);
+  animation-duration: 2.5s;
+}
+
+.cat-image.neutral {
+  filter: drop-shadow(0 6px 25px rgba(0,0,0,0.1));
+  animation-duration: 4s;
+}
+
+.cat-image.sad {
+  filter: drop-shadow(0 0 10px rgba(158, 158, 158, 0.4))
+          brightness(0.9)
+          saturate(0.8);
+  opacity: 0.85;
+  animation-duration: 5s;
+}
+
+.cat-image.very-sad {
+  filter: drop-shadow(0 0 8px rgba(97, 97, 97, 0.5))
+          brightness(0.8)
+          saturate(0.6);
+  opacity: 0.7;
+  animation-duration: 6s;
+}
+
+/* ============================================
+   ESTADOS DE ENERGÍA
+   ============================================ */
+
+.cat-image.high-energy {
+  animation-duration: 1.5s;
+}
+
+.cat-image.medium-energy {
+  animation-duration: 3s;
+}
+
+.cat-image.low-energy {
+  animation-duration: 5s;
+  filter: grayscale(0.2);
+}
+
+.cat-image.very-low-energy {
+  animation-duration: 7s;
+  filter: grayscale(0.4) brightness(0.9);
+}
+
+/* ============================================
+   EFECTOS DE PARTÍCULAS
+   ============================================ */
+
+.particle-effects {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.particle {
+  position: absolute;
+  font-size: 16px;
+  animation-fill-mode: both;
+}
+
+/* Corazones flotantes */
+.hearts .particle {
+  animation: float-hearts 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 4px rgba(255, 20, 147, 0.5));
+}
+
+.heart-1 { 
+  top: -35px; left: -25px; 
+  animation-delay: 0s; 
+}
+.heart-2 { 
+  top: -40px; right: -25px; 
+  animation-delay: 1s; 
+}
+.heart-3 { 
+  top: -30px; left: 50%; 
+  animation-delay: 2s; 
+}
+.heart-4 {
+  top: -35px; left: 30%;
+  animation-delay: 1.5s;
+}
+.heart-5 {
+  top: -20px; right: -35px;
+  animation-delay: 2.5s;
+}
+
+@keyframes float-hearts {
+  0%, 100% { 
+    opacity: 0;
+    transform: translateY(0px) scale(0.8) rotate(0deg);
+  }
+  50% { 
+    opacity: 1;
+    transform: translateY(-25px) scale(1.3) rotate(10deg);
+  }
+}
+
+/* Destellos brillantes */
+.sparkles .particle {
+  animation: sparkle 2.5s ease-in-out infinite;
+  font-size: 12px;
+}
+
+.sparkle-1 { 
+  top: -30px; left: -20px; 
+  animation-delay: 0s; 
+}
+.sparkle-2 { 
+  top: -35px; right: -15px; 
+  animation-delay: 0.6s; 
+}
+.sparkle-3 { 
+  top: -20px; left: 55%; 
+  animation-delay: 1.2s; 
+}
+.sparkle-4 { 
+  top: -30px; left: 25%; 
+  animation-delay: 1.8s; 
+}
+
+@keyframes sparkle {
+  0%, 100% { 
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% { 
+    opacity: 1;
+    transform: scale(1.5) rotate(180deg);
+  }
+}
+
+/* Burbujas de sueño */
+.sleep .particle {
+  animation: float-bubbles 4s ease-in-out infinite;
+  font-size: 14px;
+  color: #888;
+}
+
+.sleep-1 { 
+  top: -25px; right: -35px; 
+  animation-delay: 0s; 
+}
+.sleep-2 { 
+  top: -35px; right: -15px; 
+  animation-delay: 1.3s; 
+}
+.sleep-3 { 
+  top: -15px; right: -45px; 
+  animation-delay: 2.6s; 
+  font-size: 10px;
+}
+
+@keyframes float-bubbles {
+  0% { 
+    opacity: 0;
+    transform: translateY(0px) scale(0.5);
+  }
+  30% { 
+    opacity: 0.8;
+    transform: translateY(-10px) scale(1);
+  }
+  70% { 
+    opacity: 0.4;
+    transform: translateY(-20px) scale(1.2);
+  }
+  100% { 
+    opacity: 0;
+    transform: translateY(-35px) scale(0.8);
+  }
+}
+
+/* ============================================
+   EFECTOS ESPECIALES PARA MENSAJES PERSONALES
+   ============================================ */
+
+.personal-message-effect .particle {
+  animation: personal-float 4s ease-in-out infinite;
+  font-size: 14px;
+  filter: drop-shadow(0 0 6px rgba(255, 182, 193, 0.8));
+}
+
+.personal-1 { 
+  top: -40px; left: -30px; 
+  animation-delay: 0s; 
+}
+.personal-2 { 
+  top: -45px; right: -30px; 
+  animation-delay: 0.7s; 
+}
+.personal-3 { 
+  top: -25px; left: 45%; 
+  animation-delay: 1.4s; 
+}
+.personal-4 {
+  top: -35px; left: 20%;
+  animation-delay: 2.1s;
+}
+.personal-5 {
+  top: -30px; right: -40px;
+  animation-delay: 2.8s;
+}
+.personal-6 {
+  top: -50px; left: 60%;
+  animation-delay: 3.5s;
+}
+
+@keyframes personal-float {
+  0%, 100% { 
+    opacity: 0;
+    transform: translateY(0px) scale(0.6) rotate(-5deg);
+  }
+  30% { 
+    opacity: 0.9;
+    transform: translateY(-15px) scale(1.1) rotate(5deg);
+  }
+  70% { 
+    opacity: 0.6;
+    transform: translateY(-30px) scale(1.4) rotate(-3deg);
+  }
+}
+
+/* ============================================
+   GLOBO DE MENSAJE MEJORADO
+   ============================================ */
+
+.speech-bubble {
+  position: absolute;
+  top: -150px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  max-width: 320px;
+  min-width: 220px;
+  box-shadow: 
+    0 8px 32px rgba(0,0,0,0.1),
+    0 2px 16px rgba(0,0,0,0.05);
+  backdrop-filter: blur(10px);
+  z-index: 20;
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--text-primary, #2d3748);
+}
+
+.speech-bubble.love {
+  border-color: #ff6b6b;
+  background: linear-gradient(135deg, 
+    var(--bg-card, #ffffff) 0%, 
+    rgba(255, 107, 107, 0.1) 100%);
+}
+
+.speech-bubble.drama {
+  border-color: #74b9ff;
+  background: linear-gradient(135deg, 
+    var(--bg-card, #ffffff) 0%, 
+    rgba(116, 185, 255, 0.1) 100%);
+}
+
+.speech-bubble.personal {
+  border-color: #ff69b4;
+  background: linear-gradient(135deg, 
+    var(--bg-card, #ffffff) 0%, 
+    rgba(255, 105, 180, 0.15) 100%);
+  box-shadow: 
+    0 12px 40px rgba(255, 105, 180, 0.2),
+    0 4px 20px rgba(255, 105, 180, 0.1);
+  animation: personal-glow 2s ease-in-out infinite;
+}
+
+@keyframes personal-glow {
+  0%, 100% {
+    box-shadow: 
+      0 12px 40px rgba(255, 105, 180, 0.2),
+      0 4px 20px rgba(255, 105, 180, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 16px 50px rgba(255, 105, 180, 0.3),
+      0 6px 25px rgba(255, 105, 180, 0.15);
+  }
+}
+
+.speech-tail {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid var(--bg-card, #ffffff);
+}
+
+.speech-bubble.love .speech-tail {
+  border-top-color: rgba(255, 107, 107, 0.3);
+}
+
+.speech-bubble.drama .speech-tail {
+  border-top-color: rgba(116, 185, 255, 0.3);
+}
+
+.speech-bubble.personal .speech-tail {
+  border-top-color: rgba(255, 105, 180, 0.3);
+}
+
+.speech-content .message-line {
+  margin: 0.2rem 0;
+}
+
+.message-type-indicator {
+  font-size: 0.7rem;
+  color: #ff69b4;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  animation: shimmer-text 2s ease-in-out infinite;
+}
+
+@keyframes shimmer-text {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+.personal-message-footer {
+  font-size: 0.7rem;
+  color: #ff69b4;
+  font-style: italic;
+  margin-top: 0.5rem;
+  opacity: 0.8;
+}
+
+/* ============================================
+   INDICADOR DE ESTADO DE ÁNIMO
+   ============================================ */
+
+.mood-indicator {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: var(--bg-card, #ffffff);
+  border: 2px solid var(--border-color, #e2e8f0);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  z-index: 30;
+  animation: mood-bounce 2s ease-in-out infinite;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.mood-indicator.super-happy {
+  background: radial-gradient(circle, #ff6b6b 0%, #ff8e8e 100%);
+  border-color: #ff6b6b;
+}
+
+.mood-indicator.happy {
+  background: radial-gradient(circle, #ffe66d 0%, #fff89e 100%);
+  border-color: #ffe66d;
+}
+
+.mood-indicator.neutral {
+  background: radial-gradient(circle, #74b9ff 0%, #a8e6cf 100%);
+  border-color: #74b9ff;
+}
+
+.mood-indicator.sad {
+  background: radial-gradient(circle, #9e9e9e 0%, #bdbdbd 100%);
+  border-color: #9e9e9e;
+}
+
+.mood-indicator.very-sad {
+  background: radial-gradient(circle, #636363 0%, #9e9e9e 100%);
+  border-color: #636363;
+}
+
+@keyframes mood-bounce {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+}
+
+/* ============================================
+   CONTADOR DE INTERACCIONES MEJORADO
+   ============================================ */
+
+.interaction-counter {
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  color: var(--text-muted, #718096);
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  text-align: center;
+}
+
+.interaction-counter:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.last-message-time {
+  font-size: 0.7rem;
+  color: #ff69b4;
+  font-style: italic;
+}
+
+/* ============================================
+   CONTROLES DE MENSAJES PERSONALES
+   ============================================ */
+
+.personal-message-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.message-control-btn {
+  background: var(--bg-secondary, #f7f9fc);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 20px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--text-secondary, #666);
+  font-weight: 500;
+}
+
+.message-control-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.message-control-btn.motivation:hover {
+  border-color: #4ecdc4;
+  background: rgba(78, 205, 196, 0.1);
+}
+
+.message-control-btn.comfort:hover {
+  border-color: #a8e6cf;
+  background: rgba(168, 230, 207, 0.1);
+}
+
+.message-control-btn.celebration:hover {
+  border-color: #ffe66d;
+  background: rgba(255, 230, 109, 0.1);
+}
+
+.message-control-btn.friendship:hover {
+  border-color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+}
+
+/* ============================================
+   TEMA OSCURO
+   ============================================ */
+
+[data-theme="dark"] .cat-image {
+  filter: drop-shadow(0 6px 25px rgba(255, 255, 255, 0.05));
+}
+
+[data-theme="dark"] .cat-image.super-happy {
+  filter: drop-shadow(0 0 20px rgba(255, 121, 121, 0.5))
+          brightness(1.1);
+}
+
+[data-theme="dark"] .cat-image.happy {
+  filter: drop-shadow(0 0 15px rgba(253, 203, 110, 0.4))
+          brightness(1.05);
+}
+
+[data-theme="dark"] .speech-bubble.personal {
+  box-shadow: 
+    0 12px 40px rgba(255, 105, 180, 0.3),
+    0 4px 20px rgba(255, 105, 180, 0.2);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .cat-image {
+    width: 180px;
+    height: 180px;
+  }
+  
+  .speech-bubble {
+    top: -140px;
+    max-width: 300px;
+    min-width: 200px;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.85rem;
+  }
+  
+  .mood-indicator {
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
+  }
+  
+  .personal-message-controls {
+    gap: 0.3rem;
+  }
+  
+  .message-control-btn {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.65rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cat-image {
+    width: 160px;
+    height: 160px;
+  }
+  
+  .speech-bubble {
+    top: -130px;
+    max-width: 280px;
+    min-width: 180px;
+    padding: 0.8rem 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .interaction-counter {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .personal-message-controls {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* ============================================
+   ACCESIBILIDAD - MOVIMIENTO REDUCIDO
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .cat-image,
+  .particle,
+  .mood-indicator,
+  .cat-wrapper::before,
+  .speech-bubble.personal {
+    animation: none !important;
+  }
+  
+  .cat-wrapper {
+    transition: none !important;
+  }
+  
+  .cat-wrapper:hover .cat-image {
+    transform: none !important;
+  }
+}
