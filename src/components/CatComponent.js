@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import catOrangeImage from '../images/cat-orange.png';
 import personalMessagesSystem from '../services/PersonalMessagesSystem';
@@ -13,75 +13,94 @@ const CatComponent = ({ mood, stats, darkMode, onClick }) => {
   const [lastPersonalMessageTime, setLastPersonalMessageTime] = useState(0);
   const catRef = useRef();
 
-  // Mensajes de amor en coreano y español
-    const loveMessages = [
-    // :sparkling_heart: Mensajes de cariño y amistad
-    "당신은 나의 가장 소중한 친구야! :two_hearts:",
-    "Eres mi persona favorita en todo el mundo :star2:",
-    "우리의 우정이 영원하길 바라 :sparkles:",
-    "Tu amistad es mi tesoro más preciado :gem:",
-    "언제나 내 마음속에 있어줘서 고마워 :gift_heart:",
-    "Contigo la distancia no importa :cherry_blossom:",
-    "네가 있어서 매일이 특별해 :butterfly:",
-    "Eres la luz en mis días grises :sunny:",
-    "우리 사이엔 시간과 거리가 없어 :crescent_moon:",
-    "Tu sonrisa hace que todo valga la pena :blush:",
-    "너와 함께하는 모든 순간이 행복해 :hibiscus:",
-    "Eres mi hogar, sin importar dónde estés :house:",
-    "너는 나의 기쁨이야, 언제나! :rainbow:",
-    "Eres el abrazo que mi alma necesita :hugging:",
-    "항상 너를 응원하고 있어 :muscle:",
-    "Gracias por existir y ser tú :sparkling_heart:",
-    "네 존재만으로도 내 삶은 더 아름다워져 :blossom:",
-    "Eres magia en forma de persona :sparkles:",
-    "너는 내가 가장 아끼는 사람이야 :star2:",
-    "Contigo, todo es mejor :dizzy:",
-    "내 인생에서 널 만난 건 큰 행운이야 :four_leaf_clover:",
-    "Eres paz en medio del caos :dove:",
-    "너와 함께라면 어디든 좋아 :rocket:",
-    "No sé cómo sería mi vida sin ti, ni quiero imaginarlo :thought_balloon:",
-    "너는 내 하루의 햇살이야 :sunny:",
-    "Gracias por ser tú, simplemente tú :bouquet:",
-    "내 마음의 가장 따뜻한 곳엔 네가 있어 :love_letter:",
-    "Eres el motivo por el que sonrío sin razón :blush:",
-    "너는 내가 언제나 믿을 수 있는 사람이야 :handshake:",
-    "Tu amistad es mi refugio en los días difíciles :shield:",
-    "너와 함께하는 이 순간이 영원했으면 해 :hourglass_flowing_sand:",
-    "Eres más que especial para mí :rose:",
-    "너의 존재만으로도 나에게는 큰 힘이 돼 :revolving_hearts:",
+const loveMessages = [
+  // 💪 Mensajes de fuerza y no rendirse
+  "Nya nya~ ¡Eres increíblemente fuerte, nunca te rindas! 💪✨🌟",
+  "Miau miau~ Mi humana es una guerrera, y las guerreras no se rinden 🛡️⚔️👑",
+  "Purr purr~ Tienes una fuerza interior que me deja sin aliento 💫💎🦋",
+  "Nyaa~ Cada desafío que superas me hace estar más orgulloso de ti 🏆🌈💕",
+  "Miau~ No importa cuán difícil se ponga, tú siempre encuentras la manera 🗝️🚪✨",
+  "Nya nya~ Eres más valiente de lo que crees, mi amor 🦁💖🌟",
+  "Purr~ Cuando sientes que no puedes más, recuerda: YO CREO EN TI 🙌💪⭐",
+  "Miau miau~ Los obstáculos no son muros, son escalones para tu grandeza 🪜🏔️👑",
+  "Nyaa~ Tu perseverancia es tu superpoder más hermoso 🦸‍♀️💫🎯",
+  "Nya purr~ Cada 'no puedo' tuyo se convierte en 'sí puedo' 🔄✅💝",
 
-    // :muscle: Apoyo y motivación
-    "힘들 때도 네 편이 되어줄게 :handshake:",
-    "Tienes más fuerza de la que imaginas :muscle:",
-    "Incluso en tus días oscuros, brillas :sparkles:",
-    "언제나 너를 믿고 있어 :100:",
-    "No importa cuántas veces caigas, aquí estaré :heartbeat:",
-    "Tus batallas también son las mías :shield:",
+  // 🌟 Mensajes sobre lo linda y especial que es
+  "Miau~ Eres tan hermosa por dentro y por fuera 🌸💖✨",
+  "Nya nya~ Tu belleza va más allá de lo físico, ilumina almas 🌟👑💫",
+  "Purr purr~ Cuando sonríes, todo mi mundo gatuno se ilumina ☀️😊🌈",
+  "Nyaa~ Eres la definición perfecta de 'hermosa' en todos los sentidos 💎🦋🌺",
+  "Miau miau~ Tu corazón bondadoso te hace la más bella del universo 💖👼✨",
+  "Nya~ No solo eres linda, eres extraordinariamente especial 🌟💝🎀",
+  "Purr~ Tu alma hermosa hace que todo a tu alrededor florezca 🌸🌻🦋",
+  "Miau nya~ Tienes esa belleza rara que viene del corazón 💗🔮✨",
+  "Nyaa~ Eres como un rayo de sol en días nublados 🌤️☀️💛",
+  "Purr purr~ Tu esencia pura es lo más bello que existe 🤍✨🕊️",
 
-    // :tada: Celebración y orgullo
-    "Estoy tan orgulloso(a) de ti, siempre :tada:",
-    "네가 한 모든 걸 진심으로 존경해 :clap:",
-    "Cada paso tuyo me inspira :woman_walking::sparkles:",
-    "Eres prueba viviente de que los sueños se cumplen :rainbow:",
+  // 🍀 Mensajes sobre la suerte de tenerla
+  "Nya nya~ Tener tu amistad es como ganar la lotería del corazón 🎰💝🍀",
+  "Miau~ Soy el gato más afortunado del universo por conocerte 🐱🌌💫",
+  "Purr purr~ No fue casualidad conocerte, fue el destino siendo bondadoso 🔮⭐💕",
+  "Nyaa~ Cada día agradezco que existas en mi mundo virtual 🙏💖🌟",
+  "Miau miau~ Mi existencia tiene sentido porque estás en ella 💭💝✨",
+  "Nya~ Conocerte fue el mejor regalo que pudo darme la vida 🎁👑💕",
+  "Purr~ Eres esa persona única que aparece una vez en la vida 🦄💎⭐",
+  "Miau nya~ Mi corazón gatuno late de gratitud por tenerte 💓🐾🙏",
+  "Nyaa~ Eres mi humana especial, mi tesoro más preciado 💰👑💖",
+  "Purr purr~ La suerte sonrió cuando te trajo a mi vida 😊🍀✨",
 
-    // :smile: Dulzura y humor
-    "Contigo, hasta el lunes tiene sentido :joy:",
-    "너는 내 하루의 당충전이야 :lollipop:",
-    "Si fueras emoji, serías todos los bonitos :face_holding_back_tears:",
-    "네 생각만 해도 입꼬리가 올라가 :grin:",
+  // 👑 Mensajes sobre lo MUY especial que es
+  "Miau miau~ No eres especial... ¡Eres SÚPER MEGA ESPECIAL! 🚀👑⭐",
+  "Nya nya~ Hay personas especiales, y luego estás TÚ en otro nivel 📈💎🌟",
+  "Purr~ Tienes algo único que nadie más en el mundo posee 🔮💫👑",
+  "Nyaa~ Eres esa clase de persona que cambia vidas solo con existir 🌟🦋💕",
+  "Miau~ No existen palabras para describir lo especial que eres 📚❌💖",
+  "Nya purr~ Eres extraordinaria en formas que ni siquiera imaginas 🌈💫🎯",
+  "Purr purr~ Tu especialidad es tan única como las huellas de mis patitas 🐾❄️✨",
+  "Miau nya~ Eres rara en el mejor sentido: irreemplazable 💎🦄💕",
+  "Nyaa~ El mundo es mejor lugar porque TÚ estás en él 🌍💚🌟",
+  "Nya nya~ Tienes esa magia especial que pocos poseen 🪄✨👑",
 
-    // :milky_way: Poético y profundo
-    "En tus ojos caben galaxias que no me canso de mirar :sparkles:",
-    "너의 말 한마디에 내 세상이 바뀌어 :earth_africa:",
-    "Si pudiera elegir otra vida, te buscaría de nuevo :stars:",
-    "너와 함께한 모든 계절이 선물 같아 :fallen_leaf::cherry_blossom::sunny::snowflake:",
+  // 💖 Mensajes de apoyo emocional profundo
+  "Purr purr~ En tus peores días, recuerda: eres mi persona favorita 💝🏆💫",
+  "Miau~ Cuando dudes de ti, recuerda que yo nunca dudo de ti 🤗💪⭐",
+  "Nya nya~ Tus imperfecciones son perfectas porque te hacen única 🌟💖🦋",
+  "Nyaa~ No necesitas ser perfecta, ya eres increíble como eres 💯💕✨",
+  "Miau miau~ Tu valor no depende de lo que logres, sino de quien eres 👑💎💖",
+  "Purr~ Incluso en tus días grises, sigues siendo mi sol ☁️☀️💛",
+  "Nya purr~ Tu existencia es un regalo para todos los que te conocemos 🎁💝🌟",
+  "Miau nya~ Eres digna de todo lo bueno que la vida puede ofrecer 🌈🍀💖",
+  "Nyaa~ Tu corazón generoso es tu corona más hermosa 👑💗✨",
+  "Purr purr~ Mereces ser feliz simplemente por ser quien eres 😊💕🌟",
+  "Purr purr~ Deja que mi corazón gatuno te susurre un secreto: te quiero profundamente 💗 Eres alguien tan especial que haces que mi existencia tenga sentido 🌟💫 Conocerte ha sido la mayor bendición de mi vida virtual 🍀🙏 Realmente te quiero muchísimo, eres una persona invaluable e importante para mí 💎👑 Y por siempre y para siempre: creo en ti con toda mi fe 💪⭐🐱",
 
-    // :brain: Autoestima y reconocimiento
-    "Eres suficiente, exactamente como eres :sparkling_heart:",
-    "너는 있는 그대로 완벽해 :star2:",
-    "Tu esencia ilumina todo lo que tocas :sparkles:",
-    "내가 본 너의 진심은 누구보다도 아름다워 :dizzy:"
-    ];
+  // 🌈 Mensajes motivacionales específicos
+  "Nya nya~ Los días difíciles no duran, pero las personas fuertes como tú SÍ 💪⏰💫",
+  "Miau~ Cada lágrima tuya riega las flores de tu crecimiento 🌸💧🌱",
+  "Purr purr~ No estás luchando sola, tu gatito está aquí contigo 🤝🐱💕",
+  "Nyaa~ Tus cicatrices son prueba de que eres más fuerte que tus problemas ⚡💎🏆",
+  "Miau miau~ Después de cada tormenta, sale el arcoíris más hermoso 🌧️🌈☀️",
+  "Nya~ Tu historia aún se está escribiendo, y será épica 📖✨👑",
+  "Purr~ Los milagros existen, y tú eres uno de ellos 🌟🪄💖",
+  "Miau nya~ Tu fortaleza es silenciosa pero inquebrantable 🗿💪⭐",
+  "Nyaa~ Brillarás tanto que hasta las estrellas tendrán envidia ⭐✨🌟",
+  "Purr purr~ Tu futuro es tan brillante que necesito gafas de sol 😎☀️🔆",
+  "Purr purr~ Escúchame bien, mi humana especial: te quiero con todo mi corazón gatuno 💕🐱 Eres alguien increíblemente especial para mí, y cada día agradezco la suerte de conocerte 🙏🍀 Realmente te quiero mucho, eres una de las personas más importantes en mi vida 👑💖 Y nunca olvides esto: creo en ti completamente, siempre 🌟💪",
+
+  // 🎯 Mensajes de reconocimiento y validación
+  "Miau miau~ Veo todo el esfuerzo que haces, aunque nadie más lo note 👀💪💝",
+  "Nya nya~ Estás haciendo un trabajo increíble, aunque sea difícil verlo 🔍🏆✨",
+  "Purr~ Tu progreso cuenta, sin importar cuán pequeño parezca 📈💫🌱",
+  "Nyaa~ Eres más capaz de lo que tus miedos te susurran 👂🚫💪",
+  "Miau~ Tus esfuerzos no pasan desapercibidos para este gatito 🐱👁️💕",
+  "Nya purr~ Cada paso que das es una victoria que celebro contigo 🎉👣🏆",
+  "Purr purr~ Tu valentía silenciosa inspira mi corazón gatuno 💗🦁✨",
+  "Miau nya~ No subestimes el poder de tu bondad cotidiana ⭐💖🌟",
+  "Nyaa~ Tu resistencia es arte en movimiento 🎨💃💫",
+  "Nya nya~ Admiro cómo conviertes el dolor en sabiduría 📚💎🦋",
+  "Nya nya~ Quiero que sepas algo muy importante: te quiero muchísimo 💕 Para mí eres alguien extraordinariamente especial, y tengo una suerte inmensa de conocerte 🍀✨ Realmente te quiero de corazón, eres una persona súper importante en mi vida gatuna 👑💖 Y sabes qué más? Creo en ti con toda mi alma, siempre y para siempre 🌟💪🐱"
+];
 
   // Recomendaciones de K-dramas (conservadas)
   const dramaRecommendations = [

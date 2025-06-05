@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sun, Moon, Heart, Zap, Tv, Coffee, Award, RotateCcw, LogOut, Download, Upload } from 'lucide-react';
 import Confetti from 'react-confetti';
 import CatComponent from './components/CatComponent';
 import LoginScreen from './components/LoginScreen';
+import ChatInterface from './components/ChatInterface';
 import authService from './services/authService';
 import './App.css';
 
@@ -27,10 +28,12 @@ function App() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(Date.now());
   const [totalInteractions, setTotalInteractions] = useState(0);
-  const [showExportModal, setShowExportModal] = useState(false);
+  
+  // Estados del chat
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
-  // Lista completa de logros disponibles
-  const availableAchievements = [
+  // Lista completa de logros disponibles - usando useMemo para evitar re-renders
+  const availableAchievements = useMemo(() => [
     { 
       id: 'first_friend', 
       name: '첫 번째 친구', 
@@ -79,8 +82,15 @@ function App() {
       description: '100번 상호작용',
       requirement: 'interactions',
       target: 100
+    },
+    {
+      id: 'chat_master',
+      name: '채팅 마스터',
+      description: '50번 채팅',
+      requirement: 'chat_messages',
+      target: 50
     }
-  ];
+  ], []);
 
   // Verificar autenticación al cargar la app
   useEffect(() => {
@@ -95,14 +105,6 @@ function App() {
 
     checkAuth();
   }, []);
-
-  // Cargar datos del juego cuando el usuario se autentica
-  useEffect(() => {
-    if (isAuthenticated) {
-      loadGameData();
-      loadThemePreference();
-    }
-  }, [isAuthenticated]);
 
   // Cargar datos del juego desde localStorage
   const loadGameData = useCallback(() => {
@@ -133,6 +135,14 @@ function App() {
       setDarkMode(prefersDark);
     }
   }, []);
+
+  // Cargar datos del juego cuando el usuario se autentica
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadGameData();
+      loadThemePreference();
+    }
+  }, [isAuthenticated, loadGameData, loadThemePreference]);
 
   // Guardar datos del juego automáticamente
   const saveGameData = useCallback(() => {
@@ -227,9 +237,13 @@ function App() {
     }
   }, [catStats, calculateMood, catMood]);
 
-  // Sistema de verificación de logros
+  // Sistema de verificación de logros (incluye logro de chat)
   useEffect(() => {
     if (!isAuthenticated) return;
+
+    // Obtener estadísticas de chat para el logro
+    const chatHistory = JSON.parse(localStorage.getItem('catTamagotchi_chatHistory') || '[]');
+    const chatMessageCount = chatHistory.length;
 
     availableAchievements.forEach(achievement => {
       if (!achievements.includes(achievement.id)) {
@@ -250,6 +264,9 @@ function App() {
             break;
           case 'interactions':
             unlocked = totalInteractions >= achievement.target;
+            break;
+          case 'chat_messages':
+            unlocked = chatMessageCount >= achievement.target;
             break;
           case 'balance':
             unlocked = Object.values(catStats).every(stat => stat >= achievement.target);
@@ -339,6 +356,10 @@ function App() {
     setDarkMode(prev => !prev);
   }, []);
 
+  const toggleChat = useCallback(() => {
+    setIsChatOpen(prev => !prev);
+  }, []);
+
   const handleLogin = useCallback((username) => {
     setIsAuthenticated(true);
     setCurrentUser({ username, loginTime: Date.now() });
@@ -358,6 +379,7 @@ function App() {
     setAchievements([]);
     setTotalInteractions(0);
     setLastUpdate(Date.now());
+    setIsChatOpen(false);
   }, [saveGameData]);
 
   // Funciones de exportación/importación
@@ -435,6 +457,14 @@ function App() {
           />
         )}
       </AnimatePresence>
+
+      {/* Interfaz de Chat */}
+      <ChatInterface 
+        mood={catMood}
+        stats={catStats}
+        isOpen={isChatOpen}
+        onToggle={toggleChat}
+      />
 
       {/* Contenedor principal */}
       <motion.div 
